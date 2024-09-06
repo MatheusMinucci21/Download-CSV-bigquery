@@ -1,0 +1,30 @@
+from google.cloud import bigquery
+import pandas as pd
+from google.oauth2 import service_account
+
+# Caminho para o arquivo de chave JSON
+caminho_arquivo_chave = 'Arquivo JSON'
+
+# Cria credenciais usando a biblioteca google-auth
+credenciais = service_account.Credentials.from_service_account_file(
+    caminho_arquivo_chave,
+    scopes=["https://www.googleapis.com/auth/cloud-platform"]
+)
+
+# Cria um cliente BigQuery
+client = bigquery.Client(credentials=credenciais, project='Seu Projeto')
+
+# Define o SQL da consulta
+query = """
+SELECT * FROM `Caminho da Select`
+"""
+
+# Executa a consulta e obtém os dados em um DataFrame
+df = client.query(query).to_dataframe()
+
+# Exibe as primeiras linhas do DataFrame
+print(df.head())
+
+# Salva o DataFrame em um arquivo CSV (opcional)
+df.to_csv('dados_bq.csv', index=False)
+
